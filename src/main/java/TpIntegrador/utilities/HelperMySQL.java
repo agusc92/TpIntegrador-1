@@ -1,6 +1,8 @@
 package TpIntegrador.utilities;
 
 import TpIntegrador.entities.Cliente;
+import TpIntegrador.entities.Factura;
+import TpIntegrador.entities.Factura_Producto;
 import TpIntegrador.entities.Producto;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -85,7 +87,7 @@ public class HelperMySQL {
         this.conn.prepareStatement(tableFactura).execute();
         this.conn.commit();
         String tableFactura_Producto = "CREATE TABLE IF NOT EXISTS factura_producto (" +
-                "idFactura_Producto INT, " +
+                "idFactura_Producto INT AUTO_INCREMENT, " +
                 "idProducto INT NOT NULL, " +
                 "idFactura INT NOT NULL, " +
                 "cantidad INT, " +
@@ -146,6 +148,51 @@ public class HelperMySQL {
             }
         }
 
+        for (CSVRecord row : getData("facturas.csv")) {
+            if (row.size() >= 2) { // Verificar que hay al menos 4 campos en el CSVRecord
+                String idString = row.get(0);
+                String idClienteString = row.get(1);
+
+
+
+                if (!idString.isEmpty() && !idClienteString.isEmpty() ) {
+                    try {
+                        int id = Integer.parseInt(idString);
+                        int idCliente = Integer.parseInt(idClienteString);
+
+
+                        Factura factura = new Factura(id, idCliente);
+                        insertFactura(factura);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error de formato en datos de persona: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        for (CSVRecord row : getData("facturas-productos.csv")) {
+            if (row.size() >= 4) { // Verificar que hay al menos 4 campos en el CSVRecord
+                String idString = row.get(0);
+                String idStringFactura = row.get(1);
+                String idStringProducto = row.get(2);
+                String stringCantidad = row.get(3);
+
+
+                if (!idString.isEmpty() && !idStringFactura.isEmpty() && !idStringProducto.isEmpty()&& !stringCantidad.isEmpty()) {
+                    try {
+                        int id = Integer.parseInt(idString);
+                        int idFactura = Integer.parseInt(idStringFactura);
+                        int idProducto = Integer.parseInt(idStringProducto);
+                        int cantidad = Integer.parseInt(stringCantidad);
+
+                        Factura_Producto fp = new Factura_Producto(id, idFactura, idProducto,cantidad);
+                        insertFactura_Producto(fp);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error de formato en datos de persona: " + e.getMessage());
+                    }
+                }
+            }
+        }
+
         System.out.println("Personas insertadas");
 
     }
@@ -174,6 +221,8 @@ public class HelperMySQL {
         }
     }
 
+
+
     public void insertProducto(Producto producto) {
         String query = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
         PreparedStatement ps = null;
@@ -200,6 +249,58 @@ public class HelperMySQL {
 
 
     }
+    public void insertFactura(Factura factura) {
+        String query = "INSERT INTO factura (idFactura, idCliente) VALUES (?, ?)";
+        PreparedStatement ps = null;
+
+        try {
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, factura.getIdFactura());
 
 
+                ps.setInt(2, factura.getIdCliente());
+
+
+            ps.executeUpdate();
+            System.out.println("Factura insertada exitosamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                conn.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void insertFactura_Producto(Factura_Producto fp){
+
+            String query = "INSERT INTO factura_producto ( idProducto, idFactura, cantidad) VALUES ( ?, ?, ?)";
+            PreparedStatement ps = null;
+
+            try {
+                ps = conn.prepareStatement(query);
+
+                ps.setInt(1, fp.getIdProducto());
+                ps.setInt(2, fp.getIdFactura());
+                ps.setInt(3, fp.getCantidad());
+                ps.executeUpdate();
+                System.out.println("Factura_Producto insertada exitosamente.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    conn.commit();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+    }
 }
