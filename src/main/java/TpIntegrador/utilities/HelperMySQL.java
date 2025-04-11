@@ -75,6 +75,26 @@ public class HelperMySQL {
                 "CONSTRAINT producto_pk PRIMARY KEY (idProducto)); ";
         this.conn.prepareStatement(tableProducto).execute();
         this.conn.commit();
+
+        String tableFactura = "CREATE TABLE IF NOT EXISTS factura(" +
+                "idFactura INT NOT NULL, " +
+                "idCliente INT, "+
+                "CONSTRAINT factura_pk PRIMARY KEY (idFactura),"+
+
+                "CONSTRAINT cliente_fk FOREIGN KEY (idCliente) REFERENCES cliente(idCliente) );";
+        this.conn.prepareStatement(tableFactura).execute();
+        this.conn.commit();
+        String tableFactura_Producto = "CREATE TABLE IF NOT EXISTS factura_producto (" +
+                "idFactura_Producto INT, " +
+                "idProducto INT NOT NULL, " +
+                "idFactura INT NOT NULL, " +
+                "cantidad INT, " +
+                "CONSTRAINT factura_producto_factura_fk FOREIGN KEY (idFactura) REFERENCES factura(idFactura), " +
+                "CONSTRAINT factura_producto_producto_fk FOREIGN KEY (idProducto) REFERENCES producto(idProducto), " +
+                "PRIMARY KEY (idFactura_Producto)" +
+                ");";
+        this.conn.prepareStatement(tableFactura_Producto).execute();
+        this.conn.commit();
     }
 
     private Iterable<CSVRecord> getData(String archivo) throws IOException {
