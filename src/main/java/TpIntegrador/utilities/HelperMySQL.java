@@ -72,7 +72,7 @@ public class HelperMySQL {
                 "idProducto INT NOT NULL, " +
                 "nombre VARCHAR(45), " +
                 "valor float NOT NULL, " +
-                "CONSTRAINT producto_pk PRIMARY KEY (idProducto), ";
+                "CONSTRAINT producto_pk PRIMARY KEY (idProducto)); ";
         this.conn.prepareStatement(tableProducto).execute();
         this.conn.commit();
     }
@@ -130,7 +130,7 @@ public class HelperMySQL {
 
     }
     public void insertCliente(Cliente cliente) {
-        String query = "INSERT INTO Cliente (idCliente, nombre, eMail) VALUES (?, ?, ?)";
+        String query = "INSERT INTO cliente (idCliente, nombre, eMail) VALUES (?, ?, ?)";
         PreparedStatement ps = null;
 
         try {

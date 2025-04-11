@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySQLDAOFactory {
+public class MySQLDAOFactory extends AbstractFactory {
     private static MySQLDAOFactory instance = null;
 
     public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
