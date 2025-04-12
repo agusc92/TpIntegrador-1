@@ -3,6 +3,8 @@ package TpIntegrador.dao;
 import java.sql.Connection;
 
 public class FacturaDAO {
-    public FacturaDAO(Connection connection) {
+    private Connection conn;
+    public FacturaDAO(Connection conn) {
+        this.conn = conn;
     }
 }

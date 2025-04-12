@@ -4,9 +4,9 @@ public class Factura_Producto {
     private int idFactura;
     private int idProducto;
     private int cantidad;
-    private int id;
-    public Factura_Producto(int id,int idFactura, int idProducto, int cantidad) {
-        this.id = id;
+
+    public Factura_Producto(int idFactura, int idProducto, int cantidad) {
+
         this.idFactura = idFactura;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
@@ -36,13 +36,7 @@ public class Factura_Producto {
         this.cantidad = cantidad;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

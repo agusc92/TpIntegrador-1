@@ -1,5 +1,6 @@
 package TpIntegrador.dao;
 
+import TpIntegrador.dto.ProductoDTO;
 import TpIntegrador.entities.Cliente;
 import TpIntegrador.entities.Producto;
 
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 
 public class ProductoDAO {
     private Connection conn;
-    public ProductoDAO(Connection connection) {
+    public ProductoDAO(Connection conn) {
         this.conn = conn;
     }
 
@@ -103,4 +104,55 @@ public class ProductoDAO {
 
         return productoById;
     }
+
+    public ProductoDTO findProductoDTO() {
+        String query = """
+        SELECT 
+            p.idProducto,
+            p.nombre,
+            SUM(fp.cantidad * p.valor) AS total_recaudado
+        FROM 
+            producto p
+        JOIN 
+            factura_producto fp ON p.idProducto = fp.idProducto
+        GROUP BY 
+            p.idProducto, p.nombre
+        ORDER BY 
+            total_recaudado DESC
+        LIMIT 1
+    """;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int idProducto = rs.getInt("idProducto");
+                String nombre = rs.getString("nombre");
+                float totalRecaudado = rs.getFloat("total_recaudado");
+
+                return new ProductoDTO(idProducto, nombre, totalRecaudado);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+
+
+
+
+
+
 }

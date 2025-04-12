@@ -1,15 +1,18 @@
 package TpIntegrador.dao;
 
+import TpIntegrador.dto.ClienteDTO;
 import TpIntegrador.entities.Cliente;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDAO {
     private Connection conn;
-    public ClienteDAO(Connection connection) {
+    public ClienteDAO(Connection conn) {
         this.conn = conn;
     }
 
@@ -101,6 +104,61 @@ public class ClienteDAO {
 
         return clienteById;
     }
+    public List<ClienteDTO> listarClientesPorFacturacion() {
+        String query = """
+        SELECT 
+            c.idCliente,
+            c.nombre,
+            c.email,
+            SUM(fp.cantidad * p.valor) AS total_facturado
+        FROM 
+            cliente c
+        JOIN 
+            factura f ON c.idCliente = f.idCliente
+        JOIN 
+            factura_producto fp ON f.idFactura = fp.idFactura
+        JOIN 
+            producto p ON fp.idProducto = p.idProducto
+        GROUP BY 
+            c.idCliente, c.nombre, c.email
+        ORDER BY 
+            total_facturado DESC
+    """;
 
-    //preguntar si hay que hacer el delete
+        List<ClienteDTO> clientes = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idCliente = rs.getInt("idCliente");
+                String nombre = rs.getString("nombre");
+                String email = rs.getString("email");
+                float totalFacturado = rs.getFloat("total_facturado");
+
+                ClienteDTO cliente = new ClienteDTO(nombre, totalFacturado);
+                clientes.add(cliente);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return clientes;
+    }
+
+
+
+
+
 }

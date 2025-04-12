@@ -59,6 +59,19 @@ public class HelperMySQL {
         String dropProducto = "DROP TABLE IF EXISTS producto";
         this.conn.prepareStatement(dropProducto).execute();
         this.conn.commit();
+
+        String dropFactura= "DROP TABLE IF EXISTS factura";
+        this.conn.prepareStatement(dropFactura).execute();
+        this.conn.commit();
+
+        String dropProducto_factura = "DROP TABLE IF EXISTS producto_factura";
+        this.conn.prepareStatement(dropProducto_factura).execute();
+        this.conn.commit();
+
+
+
+
+
     }
 
     public void createTables() throws SQLException {
@@ -86,14 +99,14 @@ public class HelperMySQL {
                 "CONSTRAINT cliente_fk FOREIGN KEY (idCliente) REFERENCES cliente(idCliente) );";
         this.conn.prepareStatement(tableFactura).execute();
         this.conn.commit();
+
         String tableFactura_Producto = "CREATE TABLE IF NOT EXISTS factura_producto (" +
-                "idFactura_Producto INT AUTO_INCREMENT, " +
                 "idProducto INT NOT NULL, " +
                 "idFactura INT NOT NULL, " +
                 "cantidad INT, " +
                 "CONSTRAINT factura_producto_factura_fk FOREIGN KEY (idFactura) REFERENCES factura(idFactura), " +
                 "CONSTRAINT factura_producto_producto_fk FOREIGN KEY (idProducto) REFERENCES producto(idProducto), " +
-                "PRIMARY KEY (idFactura_Producto)" +
+                "PRIMARY KEY (idProducto, idFactura)" +
                 ");";
         this.conn.prepareStatement(tableFactura_Producto).execute();
         this.conn.commit();
@@ -170,21 +183,21 @@ public class HelperMySQL {
             }
         }
         for (CSVRecord row : getData("facturas-productos.csv")) {
-            if (row.size() >= 4) { // Verificar que hay al menos 4 campos en el CSVRecord
-                String idString = row.get(0);
-                String idStringFactura = row.get(1);
-                String idStringProducto = row.get(2);
-                String stringCantidad = row.get(3);
+            if (row.size() >= 3) { // Verificar que hay al menos 4 campos en el CSVRecord
+
+                String idStringFactura = row.get(0);
+                String idStringProducto = row.get(1);
+                String stringCantidad = row.get(2);
 
 
-                if (!idString.isEmpty() && !idStringFactura.isEmpty() && !idStringProducto.isEmpty()&& !stringCantidad.isEmpty()) {
+                if (!idStringFactura.isEmpty() && !idStringProducto.isEmpty()&& !stringCantidad.isEmpty()) {
                     try {
-                        int id = Integer.parseInt(idString);
+
                         int idFactura = Integer.parseInt(idStringFactura);
                         int idProducto = Integer.parseInt(idStringProducto);
                         int cantidad = Integer.parseInt(stringCantidad);
 
-                        Factura_Producto fp = new Factura_Producto(id, idFactura, idProducto,cantidad);
+                        Factura_Producto fp = new Factura_Producto(idFactura, idProducto,cantidad);
                         insertFactura_Producto(fp);
                     } catch (NumberFormatException e) {
                         System.err.println("Error de formato en datos de persona: " + e.getMessage());
@@ -283,7 +296,6 @@ public class HelperMySQL {
 
             try {
                 ps = conn.prepareStatement(query);
-
                 ps.setInt(1, fp.getIdProducto());
                 ps.setInt(2, fp.getIdFactura());
                 ps.setInt(3, fp.getCantidad());
@@ -303,4 +315,5 @@ public class HelperMySQL {
             }
 
     }
+
 }
