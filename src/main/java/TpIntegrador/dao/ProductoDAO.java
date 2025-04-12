@@ -42,31 +42,8 @@ public class ProductoDAO {
 
     }
     public boolean delete(int id) {
-        String query = "DELETE FROM Producto WHERE idProducto = ?";
-        PreparedStatement ps = null;
-        boolean result = false;
-        try {
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, id); // idPersona
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
 
-            ps.executeUpdate();
-            System.out.println("Producto borrado con exito.");
-            result = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result = false;
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                conn.commit();
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
     }
 
     public Producto find(int id) {
@@ -148,9 +125,6 @@ public class ProductoDAO {
 
         return null;
     }
-
-
-
 
 
 

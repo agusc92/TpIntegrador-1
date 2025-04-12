@@ -42,32 +42,9 @@ public class ClienteDAO {
     }
 
     public boolean delete(int id) {
-        String query = "DELETE FROM Cliente WHERE idCliente = ?";
-        PreparedStatement ps = null;
-        boolean result = false;
-        try {
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, id); // idPersona
-
-            ps.executeUpdate();
-            System.out.println("Cliente borrado con exito.");
-            result = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result = false;
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                conn.commit();
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
+
 
     public Cliente find(Integer id) {
         String query = "SELECT c.nombre, c.eMail" +

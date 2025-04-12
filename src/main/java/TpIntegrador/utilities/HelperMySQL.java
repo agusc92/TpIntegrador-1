@@ -23,7 +23,7 @@ public class HelperMySQL {
 
     public HelperMySQL() {//Constructor
         String driver = "com.mysql.cj.jdbc.Driver";
-        String uri = "jdbc:mysql://localhost:3306/testdb";
+        String uri = "jdbc:mysql://localhost:3306/integrador1";
 
         try {
             Class.forName(driver).getDeclaredConstructor().newInstance();

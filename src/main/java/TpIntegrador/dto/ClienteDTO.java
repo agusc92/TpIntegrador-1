@@ -29,9 +29,9 @@ public class ClienteDTO {
 
     @Override
     public String toString() {
-        return "ClienteDTO{" +
-                "nombre='" + nombre + '\'' +
-                ", total_facturado=" + total_facturado +
+        return "Cliente {" +
+                "Nombre='" + nombre + '\'' +
+                ", Total facturado=" + total_facturado +
                 '}';
     }
 }

@@ -14,7 +14,7 @@ public class MySQLDAOFactory extends AbstractFactory {
     private static MySQLDAOFactory instance = null;
 
     public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    public static final String uri = "jdbc:mysql://localhost:3306/testdb";
+    public static final String uri = "jdbc:mysql://localhost:3306/integrador1";
     public static Connection conn;
 
     private MySQLDAOFactory() {

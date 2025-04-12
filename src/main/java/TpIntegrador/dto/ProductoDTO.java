@@ -13,6 +13,9 @@ public class ProductoDTO {
         this.recaudacion = recaudacion;
     }
 
+    public int getIdProducto() {
+        return idProducto;
+    }
 
     public String getNombre() {
         return nombre;
@@ -24,9 +27,9 @@ public class ProductoDTO {
 
     @Override
     public String toString() {
-        return "PersonaDTO{" +
-                "nombre='" + nombre + '\'' +
-                ", recaudacion=" + recaudacion+
+        return "Producto {" +
+                "Nombre='" + nombre + '\'' +
+                ", Recaudacion=" + recaudacion+
                 '}';
     }
 
