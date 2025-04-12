@@ -16,19 +16,22 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         HelperMySQL helper = new HelperMySQL();
-        //helper.createTables();
-        //helper.populateDB();
+        helper.dropTables();
+        helper.createTables();
+        helper.populateDB();
         AbstractFactory chosenFactory = AbstractFactory.getDAOFactory(1);
         ProductoDAO productoDao = chosenFactory.getProductoDAO();
         ClienteDAO clienteDao = chosenFactory.getClienteDAO();
-
+        
+        System.out.println("______________________________________________________________");
+        System.out.println("______________________________________________________________");
         System.out.println("PUNTO 3- Busca producto con mayor recaudacion:");
         ProductoDTO productoMayorRec= productoDao.findProductoDTO();
         System.out.println(productoMayorRec);
 
         System.out.println("______________________________________________________________");
-System.out.println("______________________________________________________________");
-System.out.println("PUNTO 4-Ranking de Clientes segun su facturacion:");
+        System.out.println("______________________________________________________________");
+        System.out.println("PUNTO 4-Ranking de Clientes segun su facturacion:");
 
 //        List<Direccion> listadoDirecciones = direccion.selectList();
 //        System.out.println(listadoDirecciones);
